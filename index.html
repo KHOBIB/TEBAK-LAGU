@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Tebak Lagu FYP 2026</title>
+    <title>King Music FYP 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap");
@@ -17,22 +17,12 @@
   </head>
   <body class="flex items-center justify-center p-4 md:p-8">
     <div id="setup-screen" class="text-center w-full max-w-md py-10">
-      <h1 class="text-5xl md:text-6xl font-black mb-2 tracking-tighter text-white uppercase italic">
-        TEBAK<br /><span class="text-cyan-400">LAGU</span>
-      </h1>
-      <p class="text-gray-500 mb-10 font-bold text-[10px] md:text-xs tracking-[0.4em] uppercase">
-        Specific Hits • J-Pop Added • No Lag
-      </p>
+      <h1 class="text-5xl md:text-6xl font-black mb-2 tracking-tighter text-white uppercase italic">TEBAK<br /><span class="text-cyan-400">LAGU</span></h1>
+      <p class="text-gray-500 mb-10 font-bold text-[10px] md:text-xs tracking-[0.4em] uppercase">100+ Lagu FYP • Anti Repeat • Reff Only</p>
       <div id="loading-area" class="space-y-4 px-4">
-        <button onclick="initGame('indo')" class="w-full bg-white text-black py-5 rounded-3xl font-black text-xl hover:bg-cyan-400 shadow-2xl transition-all active:scale-95">
-          FYP INDO 🇮🇩
-        </button>
-        <button onclick="initGame('luar')" class="w-full bg-transparent border-2 border-white/20 py-5 rounded-3xl font-black text-xl text-cyan-400 hover:bg-white/5 transition-all active:scale-95">
-          FYP GLOBAL 🌎
-        </button>
-        <button onclick="initGame('jepang')" class="w-full bg-transparent border-2 border-red-500/40 py-5 rounded-3xl font-black text-xl text-red-400 hover:bg-white/5 transition-all active:scale-95">
-          J-POP VIRAL 🇯🇵
-        </button>
+        <button onclick="initGame('indo')" class="w-full bg-white text-black py-5 rounded-3xl font-black text-xl hover:bg-cyan-400 shadow-2xl transition-all active:scale-95">FYP INDO 🇮🇩</button>
+        <button onclick="initGame('luar')" class="w-full bg-transparent border-2 border-white/20 py-5 rounded-3xl font-black text-xl text-cyan-400 hover:bg-white/5 transition-all active:scale-95">FYP GLOBAL 🌎</button>
+        <button onclick="initGame('jepang')" class="w-full bg-transparent border-2 border-red-500/40 py-5 rounded-3xl font-black text-xl text-red-400 hover:bg-white/5 transition-all active:scale-95">J-POP VIRAL 🇯🇵</button>
       </div>
     </div>
 
@@ -44,40 +34,35 @@
           <p id="score" class="text-2xl md:text-3xl font-black text-white">0</p>
         </div>
       </div>
-
       <div class="text-center mb-8">
         <div class="w-20 h-20 md:w-24 md:h-24 bg-gradient-to-tr from-cyan-500/20 to-blue-600/20 mx-auto rounded-[1.5rem] flex items-center justify-center mb-4 border border-white/10 shadow-lg">
           <span class="text-4xl md:text-5xl animate-bounce">🎶</span>
         </div>
-        <p id="status-text" class="text-sm font-bold text-gray-400 italic leading-relaxed px-2">"Ini bagian viralnya, Coy..."</p>
+        <p id="status-text" class="text-sm font-bold text-gray-400 italic px-2 text-center">"Dengerin Reff-nya, King!"</p>
       </div>
-
       <div id="options" class="grid grid-cols-1 gap-3 md:gap-4 pb-2"></div>
       <audio id="player"></audio>
-
-      <button onclick="showSwitchModal()" class="absolute -bottom-6 right-8 bg-cyan-500 hover:bg-cyan-400 text-black px-4 py-2 rounded-full font-black text-[10px] uppercase shadow-xl transition-all active:scale-90 border-4 border-[#020617]">
-        Ganti Vibes 🔄
-      </button>
+      <button onclick="showSwitchModal()" class="absolute -bottom-6 right-8 bg-cyan-500 hover:bg-cyan-400 text-black px-4 py-2 rounded-full font-black text-[10px] uppercase shadow-xl border-4 border-[#020617]">Ganti Vibes 🔄</button>
     </div>
 
     <div id="switch-modal" class="hidden fixed inset-0 bg-black/90 z-[60] flex items-center justify-center p-6 backdrop-blur-md">
       <div class="w-full max-w-xs text-center glass p-8 rounded-[2rem] border border-cyan-400/30">
-        <h3 class="text-2xl font-black mb-6 text-white uppercase italic">Pilih Mode Baru</h3>
+        <h3 class="text-2xl font-black mb-6 text-white uppercase italic">Pilih Mode</h3>
         <div class="space-y-3">
           <button onclick="confirmSwitch('indo')" class="w-full py-4 bg-white text-black font-black rounded-xl text-sm">INDO 🇮🇩</button>
           <button onclick="confirmSwitch('luar')" class="w-full py-4 bg-cyan-400 text-black font-black rounded-xl text-sm">GLOBAL 🌎</button>
           <button onclick="confirmSwitch('jepang')" class="w-full py-4 bg-red-500 text-white font-black rounded-xl text-sm">JEPANG 🇯🇵</button>
-          <button onclick="closeSwitchModal()" class="text-gray-500 font-bold mt-4 text-[10px] uppercase block w-full">Gak Jadi ah</button>
+          <button onclick="closeSwitchModal()" class="text-gray-500 font-bold mt-4 text-[10px] uppercase block w-full">Batal</button>
         </div>
       </div>
     </div>
 
     <div id="modal" class="hidden fixed inset-0 bg-black/98 z-50 flex items-center justify-center p-6 backdrop-blur-xl">
       <div class="w-full max-w-xs text-center">
-        <div id="m-icon" class="text-8xl md:text-9xl mb-6"></div>
-        <h3 id="m-title" class="text-3xl md:text-4xl font-black mb-3 tracking-tight"></h3>
-        <p id="m-desc" class="text-gray-400 mb-10 text-sm font-medium italic leading-relaxed"></p>
-        <button onclick="closeModal()" class="w-full py-5 bg-white text-black font-black rounded-2xl shadow-xl active:scale-95 uppercase tracking-widest text-lg">Lanjut Coy!</button>
+        <div id="m-icon" class="text-8xl mb-6"></div>
+        <h3 id="m-title" class="text-3xl font-black mb-2"></h3>
+        <p id="m-desc" class="text-gray-400 mb-10 text-sm italic"></p>
+        <button onclick="closeModal()" class="w-full py-5 bg-white text-black font-black rounded-2xl shadow-xl uppercase tracking-widest">Lanjut King!</button>
       </div>
     </div>
 
@@ -87,76 +72,54 @@
       let correctSong = null;
       let currentCat = "";
 
-      const fypQueries = {
-        indo: ["Bernadya Untungnya Hidup", "Sal Priadi Gala Bunga Matahari", "Nadhif Basalamah Penjaga Hati", "Mahalini Sial", "Juicy Luicy Lantas", "The Lantis Lampu Merah", "The Feast Peradaban", "Reality Club Anything You Want", "Hindia Secukupnya", "Rio Clappy Bunga Menari", "Baale Titik Temu"],
-        luar: ["Radiohead No Surprises", "Yung Kai Blue", "Sombr Willow", "Laufey Back To Friends", "Billie Eilish Birds of a Feather", "ROSE Bruno Mars APT", "Bruno Mars Die With A Smile", "Sabrina Carpenter Espresso", "New West Those Eyes", "Mitski My Love Mine", "Arctic Monkeys I Wanna Be Yours"],
-        jepang: ["Fujii Kaze Matsuri", "Fujii Kaze Shinunoga E-Wa", "Yoasobi Idol", "Yoasobi Racing into the Night", "Imase Night Dancer", "HoneyWorks Kawaikute Gomen", "Creepy Nuts Bling-Bang-Bang-Born", "Lisa Gurenge"]
+      const artistsPool = {
+        indo: ["Bernadya", "Sal Priadi", "Nadhif Basalamah", "Mahalini", "Juicy Luicy", "Tulus", "Hindia", "Anggi Marito", "Tiara Andini", "Nadin Amizah", "Feby Putri", "Rizky Febian", "Lyodra", "Reality Club", "Pamungkas", "Budi Doremi", "Ghea Indrawari", "Raim Laode", "Ziva Magnolya", "Sheila On 7", "Dewa 19", "Noah", "The Lantis", "Rio Clappy", "The Feast", "Yovie & Nuno"],
+        luar: ["Radiohead", "Yung Kai", "Sombr Willow", "Laufey", "Billie Eilish", "Sabrina Carpenter", "Bruno Mars", "Gracie Abrams", "New West", "Mitski", "Arctic Monkeys", "The Weeknd", "Djo", "TV Girl", "Stephen Sanchez", "Cigarettes After Sex", "The Walters", "SZA", "Lana Del Rey", "Steve Lacy"],
+        jepang: ["Fujii Kaze", "Yoasobi", "Imase", "Kenshi Yonezu", "HoneyWorks", "Creepy Nuts", "Official Hige Dandican", "Lisa", "Vaundy", "Eve", "Tani Yuuki"]
       };
 
       async function initGame(cat) {
         currentCat = cat;
         const btnArea = document.getElementById("loading-area");
-        btnArea.innerHTML = `<div class="flex flex-col items-center"><div class="loader rounded-full border-4 h-12 w-12 mb-4"></div><p class="text-cyan-400 font-black animate-pulse uppercase text-xs">Syncing Database...</p></div>`;
+        btnArea.innerHTML = `<div class="flex flex-col items-center"><div class="loader rounded-full border-4 h-12 w-12 mb-4"></div><p class="text-cyan-400 font-black animate-pulse uppercase text-xs">Membangun Database 100+ Lagu...</p></div>`;
 
         try {
-          const queries = fypQueries[cat].sort(() => 0.5 - Math.random());
-          // Limit 1 per artis biar gak kena Block API
-          const promises = queries.map((q) =>
-            fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&entity=song&limit=1&country=${cat === "indo" ? "id" : "us"}`)
-              .then((r) => r.json())
-              .catch(() => ({ results: [] }))
+          const pool = artistsPool[cat];
+          const promises = pool.map((a) =>
+            fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(a)}&entity=song&limit=15&country=${cat === "indo" ? "id" : "us"}`)
+              .then((r) => r.json()).catch(() => ({ results: [] }))
           );
 
           const results = await Promise.all(promises);
-          playlist = results.flatMap((d) => d.results || []).map((t) => ({ 
-            title: t.trackName, 
-            artist: t.artistName, 
-            src: t.previewUrl 
-          })).filter((s) => s.src);
-
+          playlist = results.flatMap((d) => d.results || []).map((t) => ({ title: t.trackName, artist: t.artistName, src: t.previewUrl }))
+            .filter((s) => s.src);
+          
+          playlist.sort(() => 0.5 - Math.random());
           document.getElementById("setup-screen").classList.add("hidden");
           document.getElementById("game-screen").classList.remove("hidden");
           const labels = { indo: "INDO VIRAL", luar: "GLOBAL FYP", jepang: "J-POP VIRAL 🇯🇵" };
           document.getElementById("cat-label").innerText = labels[cat];
           nextQuestion();
-        } catch (e) {
-          alert("Jir, API-nya lagi pusing. Coba lagi!");
-          location.reload();
-        }
+        } catch (e) { alert("Jir, API-nya lagi pusing. Coba lagi!"); location.reload(); }
       }
 
-      function showSwitchModal() {
-        document.getElementById("player").pause();
-        document.getElementById("switch-modal").classList.remove("hidden");
-      }
-
-      function closeSwitchModal() {
-        document.getElementById("switch-modal").classList.add("hidden");
-        document.getElementById("player").play();
-      }
-
-      function confirmSwitch(cat) {
-        document.getElementById("switch-modal").classList.add("hidden");
-        document.getElementById("player").pause();
-        document.getElementById("game-screen").style.opacity = "0.3";
-        initGame(cat).then(() => { document.getElementById("game-screen").style.opacity = "1"; });
-      }
+      function showSwitchModal() { document.getElementById("player").pause(); document.getElementById("switch-modal").classList.remove("hidden"); }
+      function closeSwitchModal() { document.getElementById("switch-modal").classList.add("hidden"); document.getElementById("player").play(); }
+      function confirmSwitch(cat) { document.getElementById("switch-modal").classList.add("hidden"); document.getElementById("game-screen").style.opacity = "0.3"; initGame(cat).then(() => { document.getElementById("game-screen").style.opacity = "1"; }); }
 
       function nextQuestion() {
-        if (playlist.length < 1) { alert("Lagunya abis! Refresh buat main lagi."); location.reload(); return; }
+        if (playlist.length < 5) { alert("Lagu abis King! Refresh buat main lagi."); location.reload(); return; }
         const idx = Math.floor(Math.random() * playlist.length);
         correctSong = playlist.splice(idx, 1)[0];
         const audio = document.getElementById("player");
         audio.src = correctSong.src;
         audio.onplay = () => { if (audio.currentTime < 10) audio.currentTime = 10; };
         audio.onended = () => { audio.currentTime = 10; audio.play(); };
-        audio.play().catch(() => {});
+        audio.play().catch(() => { document.getElementById("status-text").innerText = "Klik layar buat puter musik!"; });
 
         let choices = [correctSong];
         let tempPool = [...playlist].sort(() => 0.5 - Math.random());
-        for (let s of tempPool) { 
-          if (choices.length < 4 && !choices.find((c) => c.artist === s.artist)) choices.push(s); 
-        }
+        for (let s of tempPool) { if (choices.length < 4 && !choices.find((c) => c.artist === s.artist)) choices.push(s); }
         choices.sort(() => 0.5 - Math.random());
 
         const div = document.getElementById("options");
@@ -174,8 +137,7 @@
         document.getElementById("player").pause();
         const m = document.getElementById("modal");
         if (win) {
-          score += 10;
-          document.getElementById("score").innerText = score;
+          score += 10; document.getElementById("score").innerText = score;
           document.getElementById("m-icon").innerText = "⚡";
           document.getElementById("m-title").innerText = "MANTAP!";
           document.getElementById("m-title").className = "text-3xl md:text-4xl font-black mb-2 text-cyan-400";
@@ -189,11 +151,7 @@
         m.classList.remove("hidden"); m.classList.add("flex");
       }
 
-      function closeModal() {
-        document.getElementById("modal").classList.add("hidden");
-        document.getElementById("modal").classList.remove("flex");
-        nextQuestion();
-      }
+      function closeModal() { document.getElementById("modal").classList.add("hidden"); document.getElementById("modal").classList.remove("flex"); nextQuestion(); }
     </script>
   </body>
 </html>
