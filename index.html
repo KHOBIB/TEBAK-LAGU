@@ -288,37 +288,126 @@
           document.getElementById("game-screen").style.opacity = "1";
         });
       }
+    <script>
+      let playlist = [];
+      let score = 0;
+      let correctSong = null;
+      let currentCat = "";
+
+      // DATABASE SPECIFIC (Biar Reff-nya dapet yang FYP & Gak melenceng)
+      const fypQueries = {
+        indo: [
+          "Bernadya Untungnya Hidup", "Bernadya Apa Mungkin", "Sal Priadi Gala Bunga Matahari",
+          "Sal Priadi Dari Planet Lain", "Nadhif Basalamah Penjaga Hati", "Mahalini Sampai Menutup Mata",
+          "Juicy Luicy Lantas", "Anggi Marito Tak Segampang Itu", "Tiara Andini Janji Setia",
+          "Hindia Secukupnya", "Reality Club Anything You Want", "Nadin Amizah Rayuan",
+          "Feby Putri Runtuh", "Baale Titik Temu", "Ghea Indrawari Jiwa Yang Bersedih",
+          "The Lantis Lampu Merah", "Rio Clappy Bunga Menari"
+        ],
+        luar: [
+          "Radiohead No Surprises", "Yung Kai Blue", "Sombr Willow", "Laufey Back To Friends",
+          "Billie Eilish Birds of a Feather", "ROSE Bruno Mars APT", "Bruno Mars Die With A Smile",
+          "Sabrina Carpenter Espresso", "Sabrina Carpenter Taste", "Benson Boone Beautiful Things",
+          "New West Those Eyes", "Mitski My Love Mine All Mine", "Arctic Monkeys I Wanna Be Yours",
+          "Djo End of Beginning", "TV Girl Blue Hair", "Stephen Sanchez Until I Found You"
+        ],
+        jepang: [
+          "Fujii Kaze Matsuri", "Fujii Kaze Shinunoga E-Wa", "Yoasobi Idol", "Yoasobi Racing into the Night",
+          "Kenshi Yonezu Kick Back", "Imase Night Dancer", "HoneyWorks Kawaikute Gomen",
+          "Tani Yuuki W/X/Y", "Eve Kaikai Kitan", "Lisa Gurenge", "Vaundy怪獣の花唄",
+          "Creepy Nuts Bling-Bang-Bang-Born", "Official Hige Dandican Mixed Nuts"
+        ]
+      };
+
+      // Tambahin tombol Jepang di menu awal lu secara manual di HTML ya, King!
+      // Atau lu bisa pake fungsi switch yang udah gue update di bawah.
+
+      async function initGame(cat) {
+        currentCat = cat;
+        const btnArea = document.getElementById("loading-area");
+        btnArea.innerHTML = `<div class="flex flex-col items-center"><div class="loader rounded-full border-4 h-12 w-12 mb-4"></div><p class="text-cyan-400 font-black animate-pulse uppercase text-xs">Syncing Database...</p></div>`;
+
+        try {
+          // TEMBAK SPESIFIK: Pake fypQueries biar gak dapet lagu random
+          const queries = fypQueries[cat].sort(() => 0.5 - Math.random());
+          const promises = queries.map((q) =>
+            fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&entity=song&limit=1&country=${cat === "indo" ? "id" : "us"}`)
+              .then((r) => r.json())
+              .catch(() => ({ results: [] })),
+          );
+
+          const results = await Promise.all(promises);
+          playlist = results
+            .flatMap((d) => d.results || [])
+            .map((t) => ({
+              title: t.trackName,
+              artist: t.artistName,
+              src: t.previewUrl,
+            }))
+            .filter((s) => s.src);
+
+          document.getElementById("setup-screen").classList.add("hidden");
+          document.getElementById("game-screen").classList.remove("hidden");
+          
+          // Label buat kategori baru
+          const labels = { indo: "INDO VIRAL", luar: "GLOBAL FYP", jepang: "J-POP VIRAL 🇯🇵" };
+          document.getElementById("cat-label").innerText = labels[cat];
+          
+          nextQuestion();
+        } catch (e) {
+          alert("Jir, API-nya lagi pusing. Coba lagi!");
+          location.reload();
+        }
+      }
+
+      function showSwitchModal() {
+        document.getElementById("player").pause();
+        document.getElementById("switch-modal").classList.remove("hidden");
+      }
+
+      function closeSwitchModal() {
+        document.getElementById("switch-modal").classList.add("hidden");
+        document.getElementById("player").play();
+      }
+
+      function confirmSwitch() {
+        document.getElementById("switch-modal").classList.add("hidden");
+        // Logic ganti vibes muter: Indo -> Luar -> Jepang
+        let nextCat = "";
+        if (currentCat === "indo") nextCat = "luar";
+        else if (currentCat === "luar") nextCat = "jepang";
+        else nextCat = "indo";
+
+        document.getElementById("game-screen").style.opacity = "0.3";
+        initGame(nextCat).then(() => {
+          document.getElementById("game-screen").style.opacity = "1";
+        });
+      }
 
       function nextQuestion() {
-        if (playlist.length < 5) {
+        if (playlist.length < 4) {
           alert("Lagunya abis! Refresh buat main lagi.");
           location.reload();
           return;
         }
 
+        // ANTI-NGULANG: Pake splice biar lagu yang udah keluar dibuang
         const idx = Math.floor(Math.random() * playlist.length);
         correctSong = playlist.splice(idx, 1)[0];
 
         const audio = document.getElementById("player");
         audio.src = correctSong.src;
 
-        audio.onplay = () => {
-          if (audio.currentTime < 10) audio.currentTime = 10;
-        };
-        audio.onended = () => {
-          audio.currentTime = 10;
-          audio.play();
-        };
+        audio.onplay = () => { if (audio.currentTime < 10) audio.currentTime = 10; };
+        audio.onended = () => { audio.currentTime = 10; audio.play(); };
         audio.play().catch(() => {});
 
         let choices = [correctSong];
+        // Pengecoh diambil dari playlist yang tersisa
         let tempPool = [...playlist].sort(() => 0.5 - Math.random());
 
         for (let s of tempPool) {
-          if (
-            choices.length < 4 &&
-            !choices.find((c) => c.artist === s.artist)
-          ) {
+          if (choices.length < 4 && !choices.find((c) => c.artist === s.artist)) {
             choices.push(s);
           }
         }
@@ -328,8 +417,7 @@
         div.innerHTML = "";
         choices.forEach((s) => {
           const b = document.createElement("button");
-          b.className =
-            "btn-choice w-full py-4 md:py-5 px-5 bg-white/5 rounded-2xl md:rounded-3xl text-left font-bold border border-white/5 hover:bg-white/10";
+          b.className = "btn-choice w-full py-4 md:py-5 px-5 bg-white/5 rounded-2xl md:rounded-3xl text-left font-bold border border-white/5 hover:bg-white/10";
           b.innerHTML = `<span class='text-gray-500 text-[9px] md:text-[10px] block mb-0.5 uppercase font-black'>${s.artist}</span> <span class="truncate block text-sm md:text-base">${s.title}</span>`;
           b.onclick = () => checkAnswer(s.title === correctSong.title);
           div.appendChild(b);
@@ -344,17 +432,13 @@
           document.getElementById("score").innerText = score;
           document.getElementById("m-icon").innerText = "⚡";
           document.getElementById("m-title").innerText = "MANTAP!";
-          document.getElementById("m-title").className =
-            "text-3xl md:text-4xl font-black mb-2 text-cyan-400";
-          document.getElementById("m-desc").innerText =
-            `Gila! Itu beneran lagu "${correctSong.title}".`;
+          document.getElementById("m-title").className = "text-3xl md:text-4xl font-black mb-2 text-cyan-400";
+          document.getElementById("m-desc").innerText = `Gila! Itu beneran lagu "${correctSong.title}".`;
         } else {
           document.getElementById("m-icon").innerText = "🤪";
           document.getElementById("m-title").innerText = "SALAH!";
-          document.getElementById("m-title").className =
-            "text-3xl md:text-4xl font-black mb-2 text-red-500";
-          document.getElementById("m-desc").innerText =
-            `Salah jir! Itu tadi lagunya ${correctSong.artist}.`;
+          document.getElementById("m-title").className = "text-3xl md:text-4xl font-black mb-2 text-red-500";
+          document.getElementById("m-desc").innerText = `Salah jir! Itu tadi lagunya ${correctSong.artist}.`;
         }
         m.classList.remove("hidden");
         m.classList.add("flex");
