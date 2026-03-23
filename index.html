@@ -21,7 +21,7 @@
         TEBAK<br /><span class="text-cyan-400">LAGU</span>
       </h1>
       <p class="text-gray-500 mb-10 font-bold text-[10px] md:text-xs tracking-[0.4em] uppercase">
-        Specific Hits • J-Pop Added • Reff Only
+        Specific Hits • J-Pop Added • No Lag
       </p>
       <div id="loading-area" class="space-y-4 px-4">
         <button onclick="initGame('indo')" class="w-full bg-white text-black py-5 rounded-3xl font-black text-xl hover:bg-cyan-400 shadow-2xl transition-all active:scale-95">
@@ -36,7 +36,7 @@
       </div>
     </div>
 
-    <div id="game-screen" class="hidden w-full max-w-md md:max-w-lg glass p-6 md:p-10 rounded-[2.5rem] md:rounded-[3rem] shadow-2xl relative my-4 transition-opacity duration-500">
+    <div id="game-screen" class="hidden w-full max-w-md md:max-w-lg glass p-6 md:p-10 rounded-[2.5rem] md:rounded-[3rem] shadow-2xl relative my-4">
       <div class="flex justify-between items-center mb-8">
         <span id="cat-label" class="bg-cyan-500/10 text-cyan-400 px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border border-cyan-400/20"></span>
         <div class="text-right leading-none">
@@ -47,7 +47,7 @@
 
       <div class="text-center mb-8">
         <div class="w-20 h-20 md:w-24 md:h-24 bg-gradient-to-tr from-cyan-500/20 to-blue-600/20 mx-auto rounded-[1.5rem] flex items-center justify-center mb-4 border border-white/10 shadow-lg">
-          <span id="music-emoji" class="text-4xl md:text-5xl animate-bounce">🎶</span>
+          <span class="text-4xl md:text-5xl animate-bounce">🎶</span>
         </div>
         <p id="status-text" class="text-sm font-bold text-gray-400 italic leading-relaxed px-2">"Ini bagian viralnya, Coy..."</p>
       </div>
@@ -62,7 +62,7 @@
 
     <div id="switch-modal" class="hidden fixed inset-0 bg-black/90 z-[60] flex items-center justify-center p-6 backdrop-blur-md">
       <div class="w-full max-w-xs text-center glass p-8 rounded-[2rem] border border-cyan-400/30">
-        <h3 class="text-2xl font-black mb-6 text-white uppercase tracking-tighter italic">Pilih Mode Baru</h3>
+        <h3 class="text-2xl font-black mb-6 text-white uppercase italic">Pilih Mode Baru</h3>
         <div class="space-y-3">
           <button onclick="confirmSwitch('indo')" class="w-full py-4 bg-white text-black font-black rounded-xl text-sm">INDO 🇮🇩</button>
           <button onclick="confirmSwitch('luar')" class="w-full py-4 bg-cyan-400 text-black font-black rounded-xl text-sm">GLOBAL 🌎</button>
@@ -88,9 +88,9 @@
       let currentCat = "";
 
       const fypQueries = {
-        indo: ["Bernadya Untungnya Hidup", "Sal Priadi Gala Bunga Matahari", "Nadhif Basalamah Penjaga Hati", "Mahalini Sial", "Juicy Luicy Lantas", "The Lantis Lampu Merah", "Rio Clappy Bunga Menari", "Baale Titik Temu"],
-        luar: ["Radiohead No Surprises", "Yung Kai Blue", "Sombr Willow", "Laufey Back To Friends", "Billie Eilish Birds of a Feather", "ROSE Bruno Mars APT", "Bruno Mars Die With A Smile", "Sabrina Carpenter Espresso"],
-        jepang: ["Fujii Kaze Matsuri", "Fujii Kaze Shinunoga E-Wa", "Yoasobi Idol", "Yoasobi Racing into the Night", "Imase Night Dancer", "HoneyWorks Kawaikute Gomen", "Creepy Nuts Bling-Bang-Bang-Born"]
+        indo: ["Bernadya Untungnya Hidup", "Sal Priadi Gala Bunga Matahari", "Nadhif Basalamah Penjaga Hati", "Mahalini Sial", "Juicy Luicy Lantas", "The Lantis Lampu Merah", "The Feast Peradaban", "Reality Club Anything You Want", "Hindia Secukupnya", "Rio Clappy Bunga Menari", "Baale Titik Temu"],
+        luar: ["Radiohead No Surprises", "Yung Kai Blue", "Sombr Willow", "Laufey Back To Friends", "Billie Eilish Birds of a Feather", "ROSE Bruno Mars APT", "Bruno Mars Die With A Smile", "Sabrina Carpenter Espresso", "New West Those Eyes", "Mitski My Love Mine", "Arctic Monkeys I Wanna Be Yours"],
+        jepang: ["Fujii Kaze Matsuri", "Fujii Kaze Shinunoga E-Wa", "Yoasobi Idol", "Yoasobi Racing into the Night", "Imase Night Dancer", "HoneyWorks Kawaikute Gomen", "Creepy Nuts Bling-Bang-Bang-Born", "Lisa Gurenge"]
       };
 
       async function initGame(cat) {
@@ -100,14 +100,19 @@
 
         try {
           const queries = fypQueries[cat].sort(() => 0.5 - Math.random());
+          // Limit 1 per artis biar gak kena Block API
           const promises = queries.map((q) =>
             fetch(`https://itunes.apple.com/search?term=${encodeURIComponent(q)}&entity=song&limit=1&country=${cat === "indo" ? "id" : "us"}`)
               .then((r) => r.json())
-              .catch(() => ({ results: [] })),
+              .catch(() => ({ results: [] }))
           );
 
           const results = await Promise.all(promises);
-          playlist = results.flatMap((d) => d.results || []).map((t) => ({ title: t.trackName, artist: t.artistName, src: t.previewUrl })).filter((s) => s.src);
+          playlist = results.flatMap((d) => d.results || []).map((t) => ({ 
+            title: t.trackName, 
+            artist: t.artistName, 
+            src: t.previewUrl 
+          })).filter((s) => s.src);
 
           document.getElementById("setup-screen").classList.add("hidden");
           document.getElementById("game-screen").classList.remove("hidden");
@@ -149,7 +154,9 @@
 
         let choices = [correctSong];
         let tempPool = [...playlist].sort(() => 0.5 - Math.random());
-        for (let s of tempPool) { if (choices.length < 4 && !choices.find((c) => c.artist === s.artist)) choices.push(s); }
+        for (let s of tempPool) { 
+          if (choices.length < 4 && !choices.find((c) => c.artist === s.artist)) choices.push(s); 
+        }
         choices.sort(() => 0.5 - Math.random());
 
         const div = document.getElementById("options");
@@ -179,8 +186,7 @@
           document.getElementById("m-title").className = "text-3xl md:text-4xl font-black mb-2 text-red-500";
           document.getElementById("m-desc").innerText = `Salah jir! Itu tadi lagunya ${correctSong.artist}.`;
         }
-        m.classList.remove("hidden");
-        m.classList.add("flex");
+        m.classList.remove("hidden"); m.classList.add("flex");
       }
 
       function closeModal() {
